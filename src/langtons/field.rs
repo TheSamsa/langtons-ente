@@ -27,13 +27,11 @@ impl Field<'_> {
 mod test {
 
     use super::Command;
-    use super::CommandQueue;
     use super::Field;
-    use super::Position;
 
     #[test]
     fn advance_queue() {
-        let mut field = Field::new(Position::new(0, 0));
+        let mut field = Field::new();
 
         assert_eq!(field.advance_queue(), Command::TurnRight);
         assert_eq!(field.advance_queue(), Command::TurnLeft);
