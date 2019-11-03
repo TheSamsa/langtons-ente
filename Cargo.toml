@@ -1,5 +1,5 @@
 [package]
-name = "formicidae"
+name = "langtons-antn"
 version = "0.1.0"
 authors = ["Christoph Schmidler <c.schmidler@gmail.com>"]
 edition = "2018"

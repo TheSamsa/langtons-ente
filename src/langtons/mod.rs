@@ -1,60 +1,37 @@
-use log::info;
-use std::collections::HashMap;
-use std::{thread, time};
 
-mod ant;
-mod command_queue;
-mod direction;
-mod field;
-mod position;
+pub mod entities;
 
-use ant::Ant;
-use field::Field;
-use position::Position;
+use entities::Position;
+use entities::face::Face;
+use entities::plane::Plane;
+use entities::ant::Duck;
 
-pub struct Langtons<'a> {
-    fields: HashMap<Position, Field<'a>>,
-    ant: Ant,
-    current_position: Position,
+pub trait LangtonsAnt {
+    fn issue_command(&mut self) -> Position;
+    fn grab_or_create(&self) -> Face;
+    fn append_or_overwrite(&mut self, face: Face, position: Position);
+    fn step_forward(&mut self);
 }
 
-impl Langtons<'_> {
+pub struct Langtons {
+    plane: Plane,
+    active_face: Face,
+    duck: Duck,
+}
+
+impl Langtons {
     pub fn new() -> Self {
-        let mut fields = HashMap::new();
-        let ant = Ant::default();
-        let current_position = Position::default();
-
-        fields.insert(Position::default(), Field::default());
-
         Self {
-            fields,
-            ant,
-            current_position,
+            plane: Plane::new(),
+            active_face: Face::new(),
+            duck: Duck::new(),
         }
     }
+}
 
-    pub fn start_simulation(&mut self) {
-        loop {
-            if let Some(field) = self.fields.get_mut(&self.current_position) {
-                // issue command to ant for field on current_position
-                self.ant.execute_command(field.advance_queue());
-
-                // let ant take a step forward
-                self.current_position = self.ant.step();
-
-                if let None = self.fields.get(&self.current_position) {
-                    info!("no new field");
-                    self.fields
-                        .insert(self.current_position, Field::new());
-                }
-
-                info!("current pos now: {:?}", self.current_position);
-                // wait a bit
-                let quarter_second = time::Duration::from_millis(250);
-
-                thread::sleep(quarter_second);
-                println!("")
-            }
-        }
-    }
+impl LangtonsAnt for Langtons {
+    fn issue_command(&mut self) ->Position { Position::new() }
+    fn grab_or_create(&self) -> Face { Face::new() }
+    fn append_or_overwrite(&mut self, face: Face, position: Position) {}
+    fn step_forward(&mut self) {}
 }
